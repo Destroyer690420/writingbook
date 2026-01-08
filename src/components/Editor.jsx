@@ -1,7 +1,36 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useStories } from '../contexts/StoriesContext';
 import { CheckSquare } from 'lucide-react';
+
 import RichTextEditor from './RichTextEditor';
+import { useTransliteration } from '../contexts/TransliterationContext';
+import { Languages } from 'lucide-react';
+
+function TransliterationToggle() {
+    const { isEnabled, toggle } = useTransliteration();
+    return (
+        <button
+            onClick={toggle}
+            style={{
+                background: isEnabled ? 'var(--primary-color)' : 'transparent',
+                color: isEnabled ? 'white' : 'var(--text-secondary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '4px',
+                padding: '4px 8px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'all 0.2s'
+            }}
+            title={isEnabled ? "Disable Hinglish Transliteration" : "Enable Hinglish Transliteration"}
+        >
+            <Languages size={14} />
+            {isEnabled ? 'Hinglish: ON' : 'Hinglish: OFF'}
+        </button>
+    );
+}
 
 function useDebounce(callback, delay) {
     const [timer, setTimer] = useState(null);
@@ -64,6 +93,9 @@ export default function Editor() {
         <main style={{ flex: 1, height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-editor)' }}>
             {/* Top Status Bar (Minimal) */}
             <div style={{ padding: '8px 20px', display: 'flex', justifyContent: 'flex-end', fontSize: '12px', color: 'var(--text-tertiary)' }}>
+                <div style={{ marginRight: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <TransliterationToggle />
+                </div>
                 {lastSaved ? <span>Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span> : <span>Unsaved changes</span>}
             </div>
 

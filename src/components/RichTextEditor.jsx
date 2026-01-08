@@ -1,9 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { transliterate } from '../services/transliterate';
+import { useTransliteration } from '../contexts/TransliterationContext';
 
 export default function RichTextEditor({ value, onChange, placeholder, style }) {
     const editorRef = useRef(null);
     const [toolbar, setToolbar] = useState({ visible: false, top: 0, left: 0 });
+    const { isEnabled } = useTransliteration();
 
     // Initialize content
     useEffect(() => {
@@ -47,6 +49,8 @@ export default function RichTextEditor({ value, onChange, placeholder, style }) 
     const handleKeyDown = async (e) => {
         // Transliteration Trigger (Space)
         if (e.key === ' ' || e.key === 'Enter') {
+            if (!isEnabled) return; // Skip if disabled
+
             const selection = window.getSelection();
             if (!selection.rangeCount) return;
 
